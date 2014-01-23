@@ -1,0 +1,20 @@
+author: Ar7ific1al
+description: Your staff will now clock in and out.
+main: com.github.ar7ific1al.otcrb.OTC
+name: OnTheClock
+url: 
+version: 2.0
+commands:
+    otc:
+      description: Base command for On The Clock.
+      usage: /<command> help
+permissions:
+    otc.clock:
+      description: Players with this permission clock in and out.
+      default: false
+    otc.announce.mod:
+      description: Announces to the server when a player with this permission joins. Intended for announcing when Moderators join.
+      default: false
+    otc.announce.custom:
+      description: Broadcasts a personalized announcement  to the server upon joining for players with this permission. The player can change it at will.
+      default: false

@@ -1,0 +1,6 @@
+Variables:
+#Placed at the beginning of each announcement
+    Announcement Prefix: "&6[OTC]&f "
+Defaults:
+#The default login message for players without custom login message permissions
+    Announcements: "&c%p &eis here! Need help? Ask them!"
