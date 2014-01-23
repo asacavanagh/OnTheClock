@@ -26,6 +26,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class OTC extends JavaPlugin	{
+	//	TEST TIME :D
 	public final Logger console = Logger.getLogger("OTC");
 	
 	public OTCListener listener = new OTCListener(this);
