@@ -3,6 +3,7 @@ package com.github.ar7ific1al.otcrb;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.UUID;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
@@ -22,16 +23,16 @@ public class OTCListener implements Listener	{
 	@EventHandler
 	public void login(PlayerJoinEvent event)	{
 		Player player = event.getPlayer();
-		String pName = player.getName();
+		UUID pUUID = player.getUniqueId();
 		try	{
 			if(player.hasPermission("otc.clock"))	{
-					OTC.clock(pName, "in");
+					OTC.clock(pUUID, "in");
 			}
 			if(player.hasPermission("otc.announce.mod") && !player.hasPermission("otc.announce.custom"))	{
 				event.setJoinMessage(OTC.broadcastJoin(player, "mod"));
 			}
 			else if(player.hasPermission("otc.announce.custom"))	{
-				File pFile = new File("plugins/OnTheClock/Players/", pName + ".yml");
+				File pFile = new File("plugins/OnTheClock/Players/", pUUID + ".yml");
 				if(!pFile.exists())	{
 					pFile.createNewFile();
 				}
@@ -49,10 +50,10 @@ public class OTCListener implements Listener	{
 	@EventHandler
 	public void logout(PlayerQuitEvent event)	{
 		Player player = event.getPlayer();
-		String pName = player.getName();
+		UUID pUUID = player.getUniqueId();
 		try	{
 			if(player.hasPermission("otc.clock"))	{
-					OTC.clock(pName, "out");
+					OTC.clock(pUUID, "out");
 			}
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
