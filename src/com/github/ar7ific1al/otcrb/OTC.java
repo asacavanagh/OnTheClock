@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class OTC extends JavaPlugin	{
 	//	TEST TIME :D
 	// ~Jag was here! :D
+	// asa also fondled here too! :D
 	public final Logger console = Logger.getLogger("OTC");
 	
 	public OTCListener listener = new OTCListener(this);
@@ -47,7 +49,7 @@ public class OTC extends JavaPlugin	{
 		String ver = pdFile.getVersion();
 		String enabled = "OTC v" + ver + " enabled.";
 		
-		settingsFile = new File(getDataFolder(), "settings.yml");
+		settingsFile = new File(getDataFolder(), "config.yml");
 		settings = new YamlConfiguration();
 		
 		console.info(enabled);
@@ -78,7 +80,7 @@ public class OTC extends JavaPlugin	{
 		for(Player p : Bukkit.getServer().getOnlinePlayers())	{
 			if (p.hasPermission("otc.clock"))	{
 				try {
-					clock(p.getName(), "out");
+					clock(p.getUniqueId(), "out");
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
@@ -92,7 +94,7 @@ public class OTC extends JavaPlugin	{
 	
 	public void firstRun()	{
 		if(!settingsFile.exists())	{
-			saveResource("settings.yml", false);
+			saveResource("config.yml", false);
 		}
 	}
 	
@@ -125,7 +127,7 @@ public class OTC extends JavaPlugin	{
 	
 	public void newPlayerConfig(Player player) throws FileNotFoundException, IOException, InvalidConfigurationException	{
 		if (player.hasPermission("otc.announce.special"))	{
-			File pFile = new File(getDataFolder(), player.getName() + ".yml");
+			File pFile = new File(getDataFolder(), player.getUniqueId() + ".yml");
 			FileConfiguration tmpfc = new YamlConfiguration();
 			tmpfc.load(pFile);
 			tmpfc.addDefault("Announcement", settings.get("Defaults.Announcements"));
@@ -134,8 +136,8 @@ public class OTC extends JavaPlugin	{
 		}
 	}
 	
-	public static void clock(String pName, String clock) throws FileNotFoundException, IOException, InvalidConfigurationException	{
-		File pConfig = new File("plugins/OnTheClock/Players/", pName + ".yml");
+	public static void clock(UUID pUUID, String clock) throws FileNotFoundException, IOException, InvalidConfigurationException	{
+		File pConfig = new File("plugins/OnTheClock/Players/", pUUID + ".yml");
 		if (!pConfig.exists())	{
 			pConfig.createNewFile();
 		}
@@ -186,13 +188,14 @@ public class OTC extends JavaPlugin	{
 	
 	public static String broadcastJoin(Player player, String type) throws FileNotFoundException, IOException, InvalidConfigurationException {
 		String pName = player.getName();
+		UUID pUUID = player.getUniqueId();
 		String message = "";
 		if(type.equalsIgnoreCase("mod"))	{
 			settings.load(settingsFile);
 			message = formatBroadcast(settings.getString("Defaults.Announcements"), pName);
 		}
 		else if(type.equalsIgnoreCase("custom"))	{
-			File tf = new File("plugins/OnTheClock/Players/", pName + ".yml");
+			File tf = new File("plugins/OnTheClock/Players/", pUUID + ".yml");
 			FileConfiguration tmpfc = new YamlConfiguration();
 			tmpfc.load(tf);
 			tmpfc.addDefault("Announcement", settings.getString("Defaults.Announcements"));
@@ -235,10 +238,11 @@ public class OTC extends JavaPlugin	{
 		if (sender instanceof Player)	{
 			Player player = (Player) sender;
 			String pName = player.getName();
+			UUID pUUID = player.getUniqueId();
 			if (cmdLabel.equalsIgnoreCase("otc"))	{
 				try	{
 					if (args.length < 1)	{
-						player.sendMessage(ChatColor.GOLD + "[OTC] " + ChatColor.YELLOW +  "On The Clock v" + getDescription().getVersion() + " by " +	 ChatColor.RED + "Ar7ific1al");
+						player.sendMessage(ChatColor.GOLD + "[OTC] " + ChatColor.YELLOW +  "On The Clock v" + getDescription().getVersion() + " by " +	 ChatColor.RED + "Ar7ific1al, updated by asacavanagh");
 						if (player.hasPermission("otc.announce.custom"))	{
 							player.sendMessage(ChatColor.YELLOW + " You have otc.announce.custom. Use " + ChatColor.RED + "/otc cb Message" + ChatColor.YELLOW
 									+ " to set your own custom join message. You can use format codes for color, bold, italics, etc.");
@@ -248,7 +252,7 @@ public class OTC extends JavaPlugin	{
 						if (args[0].equalsIgnoreCase("cb"))	{
 							if (player.hasPermission("otc.announce.custom"))	{
 								if (args.length < 2)	{
-									File pFile = new File("plugins/OnTheClock/Players/", player.getName() + ".yml");
+									File pFile = new File("plugins/OnTheClock/Players/", pUUID + ".yml");
 									if (!pFile.exists())	{
 										player.sendMessage(ChatColor.GOLD + "[OTC] " + ChatColor.YELLOW + "You do not currently have a special announcement.\n\tUse " + ChatColor.RED + "/otc sa message" + ChatColor.YELLOW + " to set your announcement.");
 									}
@@ -267,7 +271,7 @@ public class OTC extends JavaPlugin	{
 											message += " ";
 										}
 									}
-									File pFile = new File("plugins/OnTheClock/Players/", pName + ".yml");
+									File pFile = new File("plugins/OnTheClock/Players/", pUUID + ".yml");
 									if (pFile.exists())	{
 										FileConfiguration tmpfc = new YamlConfiguration();
 										tmpfc.load(pFile);
@@ -276,7 +280,7 @@ public class OTC extends JavaPlugin	{
 									}
 									else if (!pFile.exists())	{
 										console.log(Level.INFO, "File " + pFile + " doesn't exist! Creating file...");
-										pFile = new File("plugins/OnTheClock/Players", pName + ".yml");
+										pFile = new File("plugins/OnTheClock/Players", pUUID + ".yml");
 										pFile.createNewFile();
 										FileConfiguration tmpfc = new YamlConfiguration();
 										tmpfc.load(pFile);
