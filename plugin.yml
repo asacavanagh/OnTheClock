@@ -1,9 +1,9 @@
-author: Ar7ific1al
-description: Your staff will now clock in and out.
+author: Ar7ific1al, asacavanagh
+description: Your staff will now clock in and out. (Now with UUID support!)
 main: com.github.ar7ific1al.otcrb.OTC
 name: OnTheClock
 url: 
-version: 2.0
+version: 3.0
 commands:
     otc:
       description: Base command for On The Clock.
